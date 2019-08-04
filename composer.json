@@ -1,0 +1,30 @@
+{
+    "name": "codebooth/data-transfer-object",
+    "description": "Data Transfer Object is all about how the data is represented",
+    "keywords": [
+        "data-transfer-object",
+        "data-structure",
+        "codebooth"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodeBooth\\DataTransferObject\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodeBooth\\DataTransferObject\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    }
+}

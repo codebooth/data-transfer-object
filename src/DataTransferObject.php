@@ -13,6 +13,13 @@ use ReflectionProperty;
 abstract class DataTransferObject
 {
     /**
+     * Array of casts to be performed. Keys are attribute names, values are type casts.
+     *
+     * @var array
+     */
+    public $casts = [];
+
+    /**
      * DataTransferObject constructor.
      *
      * @param array $attributes
@@ -28,6 +35,10 @@ abstract class DataTransferObject
 
         foreach ($properties as $property) {
             $propertyName = $property->getName();
+
+            if ($this->isReservedPropertyName($property->getName())) {
+                continue;
+            }
 
             if (! isset($attributes[$propertyName])) {
                 throw new DataException("Property `{$property->getName()}` has not been initialized");
@@ -58,6 +69,10 @@ abstract class DataTransferObject
         $properties = $class->getProperties(ReflectionProperty::IS_PUBLIC);
 
         foreach ($properties as $reflectionProperty) {
+            if ($this->isReservedPropertyName($reflectionProperty->getName())) {
+                continue;
+            }
+
             $data[$reflectionProperty->getName()] = $reflectionProperty->getValue($this);
         }
 
@@ -79,5 +94,17 @@ abstract class DataTransferObject
         }
 
         return $properties;
+    }
+
+    /**
+     * Check if the property name is reserved.
+     *
+     * @param string $propertyName
+     *
+     * @return bool
+     */
+    protected function isReservedPropertyName(string $propertyName)
+    {
+        return in_array($propertyName, ['casts']);
     }
 }

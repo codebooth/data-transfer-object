@@ -35,6 +35,62 @@ class Property extends ReflectionProperty
     {
         $property = $this->getName();
 
-        $this->dto->{$property} = $value;
+        if ($this->hasCast($property)) {
+            $value = $this->cast($value);
+        }
+
+        $this->dto->{$this->getName()} = $value;
+    }
+
+    /**
+     * Check if the attribute's value needs to cast.
+     *
+     * @param string $attribute
+     *
+     * @return bool
+     */
+    protected function hasCast(string $attribute)
+    {
+        return array_key_exists($attribute, $this->dto->casts);
+    }
+
+    /**
+     * Cast an attribute to a native PHP type.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    protected function cast($value)
+    {
+        if (is_null($value)) {
+            return $value;
+        }
+
+        switch ($this->getCastType($this->getName())) {
+            case 'int':
+            case 'integer':
+                return (int) $value;
+
+            case 'real':
+            case 'float':
+            case 'double':
+                return (float) $value;
+
+            default:
+                $value;
+        }
+    }
+
+    /**
+     * Get the type of cast for attribute.
+     *
+     * @param string $attribute
+     *
+     * @return string
+     */
+    protected function getCastType(string $attribute)
+    {
+        return trim(strtolower($this->dto->casts[$attribute]));
     }
 }
